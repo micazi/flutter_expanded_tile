@@ -2,7 +2,6 @@ library flutter_expanded_tile;
 
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-
 import 'tileController.dart';
 
 class ExpandedTile extends StatefulWidget {
@@ -19,9 +18,11 @@ class ExpandedTile extends StatefulWidget {
   // trailing
   final Icon expandIcon;
   final bool rotateExpandIcon;
+  // Checkbox
   final bool checkable;
   final Color checkBoxColor;
   final Color checkBoxActiveColor;
+  final Function(bool value) onChecked;
   // Content
   final Widget content;
   final Color contentBackgroundColor;
@@ -50,8 +51,10 @@ class ExpandedTile extends StatefulWidget {
     this.checkable = false,
     this.expandIcon,
     this.rotateExpandIcon = true,
+    // checkbox
     this.checkBoxColor = const Color(0xffffffff),
     this.checkBoxActiveColor = const Color(0xff039be5),
+    this.onChecked,
     // Content
     this.contentBackgroundColor = const Color(0xffeeeeee),
     this.contentPadding = const EdgeInsets.all(16.0),
@@ -59,6 +62,7 @@ class ExpandedTile extends StatefulWidget {
     this.expansionDuration = const Duration(milliseconds: 200),
     this.expansionAnimationCurve = Curves.ease,
   })  : assert(expandIcon == null || checkable == false),
+        assert((checkable == true || onChecked == null)),
         super(key: key);
   @override
   _ExpandedTileState createState() => _ExpandedTileState();
@@ -133,6 +137,8 @@ class _ExpandedTileState extends State<ExpandedTile>
                               onChanged: (v) {
                                 setState(() {
                                   checkboxValue = v;
+                                  if (widget.onChecked != null)
+                                    return widget.onChecked(v);
                                 });
                               })
                           : widget.expandIcon ??
