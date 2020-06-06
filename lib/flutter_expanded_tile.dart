@@ -1,59 +1,92 @@
 library flutter_expanded_tile;
 
 import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
-class ExpandedListItem extends StatefulWidget {
+import 'tileController.dart';
+
+class ExpandedTile extends StatefulWidget {
   // header
-  final Widget leading;
-  final Text title;
-  final EdgeInsetsGeometry titlePadding;
-  final Icon expandIcon;
   final Color headerColor;
   final Color headerSplashColor;
-  final bool centerHeaderTitle;
   final EdgeInsetsGeometry headerPadding;
+  // leading
+  final Widget leading;
+  // title
+  final Text title;
+  final bool centerHeaderTitle;
+  final EdgeInsetsGeometry titlePadding;
+  // trailing
+  final Icon expandIcon;
   final bool rotateExpandIcon;
-  final Duration expansionDuration;
-  final Curve expansionAnimationCurve;
-  final Function(bool expanded) expansionListener;
-
+  final bool checkable;
+  final Color checkBoxColor;
+  final Color checkBoxActiveColor;
   // Content
   final Widget content;
   final Color contentBackgroundColor;
   final EdgeInsetsGeometry contentPadding;
+  // Misc
+  final ExpandedTileController controller;
+  final Curve expansionAnimationCurve;
+  final Duration expansionDuration;
 
-  const ExpandedListItem({
+  const ExpandedTile({
     key,
-    this.leading,
+    // Requirds
     @required this.title,
-    this.titlePadding = const EdgeInsets.all(8),
-    this.expandIcon =
-    const Icon(Icons.keyboard_arrow_right, color: Colors.black),
+    @required this.content,
+    @required this.controller,
+    // header
     this.headerColor = const Color(0xfffafafa),
     this.headerSplashColor = const Color(0xffeeeeee),
-    this.centerHeaderTitle = false,
     this.headerPadding = const EdgeInsets.all(16.0),
+    // leading
+    this.leading,
+    // title
+    this.centerHeaderTitle = false,
+    this.titlePadding = const EdgeInsets.all(8),
+    // trailing
+    this.checkable = false,
+    this.expandIcon,
     this.rotateExpandIcon = true,
-    this.expansionDuration = const Duration(milliseconds: 200),
-    this.expansionAnimationCurve = Curves.ease,
-    this.expansionListener,
-    @required this.content,
+    this.checkBoxColor = const Color(0xffffffff),
+    this.checkBoxActiveColor = const Color(0xff039be5),
+    // Content
     this.contentBackgroundColor = const Color(0xffeeeeee),
     this.contentPadding = const EdgeInsets.all(16.0),
-  }) : super(key: key);
+    // Misc
+    this.expansionDuration = const Duration(milliseconds: 200),
+    this.expansionAnimationCurve = Curves.ease,
+  })  : assert(expandIcon == null || checkable == false),
+        super(key: key);
   @override
-  _ExpandedListItemState createState() => _ExpandedListItemState();
+  _ExpandedTileState createState() => _ExpandedTileState();
 }
 
-class _ExpandedListItemState extends State<ExpandedListItem>
+class _ExpandedTileState extends State<ExpandedTile>
     with SingleTickerProviderStateMixin {
+  ExpandedTileController tileController;
   bool _isExpanded;
+  bool checkboxValue;
   @override
   void initState() {
     _isExpanded = false;
+    checkboxValue = false;
+    tileController = widget.controller;
+    tileController.addListener(() {
+      if (this.mounted)
+        setState(() {
+          _isExpanded = tileController.isExpanded;
+        });
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    tileController.dispose();
+    super.dispose();
   }
 
   @override
@@ -69,11 +102,7 @@ class _ExpandedListItemState extends State<ExpandedListItem>
             child: InkWell(
               splashColor: widget.headerSplashColor,
               onTap: () {
-                setState(() {
-                  _isExpanded = !_isExpanded;
-                });
-                if (widget.expansionListener != null)
-                  return widget.expansionListener(_isExpanded);
+                tileController.toggle();
               },
               child: Container(
                 padding: widget.headerPadding,
@@ -91,11 +120,23 @@ class _ExpandedListItemState extends State<ExpandedListItem>
                       ),
                     ),
                     Transform.rotate(
-                      angle: widget.rotateExpandIcon
-                          ? _isExpanded ? math.pi / 2 : 0
-                          : 0,
-                      child:
-                      widget.expandIcon ?? Icon(Icons.keyboard_arrow_right),
+                      angle: widget.checkable
+                          ? 0
+                          : widget.rotateExpandIcon
+                              ? _isExpanded ? math.pi / 2 : 0
+                              : 0,
+                      child: widget.checkable
+                          ? Checkbox(
+                              checkColor: widget.checkBoxColor,
+                              activeColor: widget.checkBoxActiveColor,
+                              value: checkboxValue,
+                              onChanged: (v) {
+                                setState(() {
+                                  checkboxValue = v;
+                                });
+                              })
+                          : widget.expandIcon ??
+                              Icon(Icons.keyboard_arrow_right),
                     ),
                   ],
                 ),
@@ -112,10 +153,10 @@ class _ExpandedListItemState extends State<ExpandedListItem>
                 child: !_isExpanded
                     ? null
                     : Container(
-                    padding: widget.contentPadding,
-                    color: widget.contentBackgroundColor,
-                    width: double.infinity,
-                    child: widget.content),
+                        padding: widget.contentPadding,
+                        color: widget.contentBackgroundColor,
+                        width: double.infinity,
+                        child: widget.content),
               ),
             ),
           ),
@@ -124,4 +165,3 @@ class _ExpandedListItemState extends State<ExpandedListItem>
     );
   }
 }
-

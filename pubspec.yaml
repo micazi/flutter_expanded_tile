@@ -1,7 +1,6 @@
 name: flutter_expanded_tile
-description: An Expansion tile similar to the list tile supports leading widget with content expansion animation.
-version: 0.1.0
-author: Michael Aziz<micw.aziz@gmail.com>
+description: An Expansion tile similar to the list tile supports leading widget,checkbox option and programatic control with content expansion animation.
+version: 0.2.0
 homepage: https://github.com/micwaziz/flutter_expanded_tile
 
 environment:

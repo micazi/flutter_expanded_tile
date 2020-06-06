@@ -1,6 +1,6 @@
 # flutter_expanded_tile
 
-An Expansion tile similar to the list tile supports leading widget with content expansion animation.
+An Expansion tile similar to the list tile supports leading widget,checkbox option and programatic control with content expansion animation.
 
 ## Getting Started
 
@@ -27,30 +27,42 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 
 ## Example
 
-Use as you would use an ordinary list tile.
+![](example/demo.gif)
 
 ```
 .
 .
-ExpandedListItem(
-          title: Text(
-            "Lorem ipsum.",
-            style: TextStyle(color: Colors.red),
-          ),
-          content: Container(
-              child: Column(
-            children: <Widget>[
-                Text("text1"),
-                Text("text2"),
-            ],
-          ),
-          ),
-          leading: Icon(Icons.menu),
-          centerHeaderTitle: false,
-           expansionListener: (v) {
-             log("$v");
-           },
-        ),
+ // Controller
+  ExpandedTileController _controller;
+
+  void initState() {
+    // initialize controller
+    _controller = ExpandedTileController();
+    super.initState();
+  }
+  .
+  .
+ExpandedTile(
+                controller: _controller,
+                checkable: false, // check box enabled or not
+                leading: Icon(Icons.menu),
+                centerHeaderTitle: false,
+                title: Text(
+                  "With Leading.",
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                  ),
+                ),
+                content: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Text("text1"),
+                      Text("text2"),
+                    ],
+                  ),
+                ),
+                contentBackgroundColor: Colors.green[100],
+              ),
 .
 .
 
@@ -58,23 +70,30 @@ ExpandedListItem(
 
 ## Usage
 
-| Property                              | Description                                    | Default                                               |
-| ------------------------------------- | ---------------------------------------------- | ----------------------------------------------------- |
-| **@required Text** title              | Text Widget representing the title of the tile | **@required**                                         |
-| **@required Widget** content          | Content which expands                          | **@required**                                         |
-| **Widget** leading                    | leading widget before the title                | null                                                  |
-| **Icon** expandedIcon                 | ..                                             | Icon(Icons.keyboard_arrow_right, color: Colors.black) |
-| **bool** centerTitle                  | ..                                             | false                                                 |
-| **bool** rotateExpandedIcon           | ..                                             | true                                                  |
-| **Color** headerColor                 | ..                                             | Color(0xfffafafa)                                     |
-| **Color** headerSplashColor           | ..                                             | Color(0xffeeeeee)                                     |
-| **Color** contentBackgroundColor      | ..                                             | Color(0xffeeeeee)                                     |
-| **EdgeInsetsGeometry** titlePadding   | ..                                             | EdgeInsets.all(8)                                     |
-| **EdgeInsetsGeometry** headerPadding  | ..                                             | EdgeInsets.all(16.0)                                  |
-| **EdgeInsetsGeometry** contentPadding | ..                                             | EdgeInsets.all(16.0)                                  |
-| **Duration** expansionDuration        | ..                                             | Duration(milliseconds: 200)                           |
-| **Curve** expansionAnimationcurve     | ..                                             | Curves.ease                                           |
-| **Function(bool)** expansionListener  | a callback for when the header is clicked      | null                                                  |
+| Property                                        | Description                                    | Default                                                                  |
+| ----------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------ |
+| **@required Text** title                        | Text Widget representing the title of the tile | **@required**                                                            |
+| **@required Widget** content                    | Content which expands                          | **@required**                                                            |
+| **@required ExpandedTileController** controller | Tile Controller                                | **@required**                                                            |
+| **Widget** leading                              | leading widget before the title                | null                                                                     |
+| **Icon** expandedIcon                           | ..                                             | !checkable? Icon(Icons.keyboard_arrow_right, color: Colors.black) : null |
+| **bool** centerTitle                            | ..                                             | false                                                                    |
+| **bool** rotateExpandedIcon                     | ..                                             | !checkable? true : false                                                 |
+| **bool** checkable                              | Wheather tile has a checkbox or not.           | false                                                                    |
+| **Color** headerColor                           | ..                                             | Color(0xfffafafa)                                                        |
+| **Color** contentBackgroundColor                | ..                                             | Color(0xffeeeeee)                                                        |
+| **Color** headerSplashColor                     | ..                                             | Color(0xffeeeeee)                                                        |
+| **Color** checkBoxColor                         | check mark color                               | Color(0xffffffff)                                                        |
+| **Color** checkBoxActiveColor                   | checkbox background color                      | Color(0xff039be5)                                                        |
+| **EdgeInsetsGeometry** titlePadding             | ..                                             | EdgeInsets.all(8)                                                        |
+| **EdgeInsetsGeometry** headerPadding            | ..                                             | EdgeInsets.all(16.0)                                                     |
+| **EdgeInsetsGeometry** contentPadding           | ..                                             | EdgeInsets.all(16.0)                                                     |
+| **Duration** expansionDuration                  | ..                                             | Duration(milliseconds: 200)                                              |
+| **Curve** expansionAnimationcurve               | ..                                             | Curves.ease                                                              |
+
+### Assertions
+
+- Must not set **checkable** as true and define **expandIcon**.
 
 ## Built With
 

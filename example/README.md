@@ -23,35 +23,54 @@ class Example extends StatefulWidget {
 }
 
 class _ExampleState extends State<Example> {
+  // Controller
+  ExpandedTileController _controller;
+
+  void initState() {
+    // initialize controller
+    _controller = ExpandedTileController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: ExpandedListItem(
-          leading: Icon(Icons.menu),
-          centerHeaderTitle: false,
-          title: Text(
-            "Lorem ipsum.",
-            style: TextStyle(
-              color: Colors.grey[800],
-            ),
-          ),
-          expansionListener: (bool v) {
-            log("$v");
-          },
-          content: Container(
-            child: Column(
-              children: <Widget>[
-                Text("text1"),
-                Text("text2"),
-              ],
-            ),
-          ),
-          contentBackgroundColor: Colors.green[100],
-        ),
+        child: ExpandedTile(
+                controller: _controller,
+                checkable: false, // check box enabled or not
+                leading: Icon(Icons.menu),
+                centerHeaderTitle: false,
+                title: Text(
+                  "With Leading.",
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                  ),
+                ),
+                content: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Text("text1"),
+                      Text("text2"),
+                    ],
+                  ),
+                ),
+                contentBackgroundColor: Colors.green[100],
+              ),
       ),
     );
   }
 }
+
+.
+.
+// Controller has
+Expand function
+Collapse function
+Toggle function
+isExpanded parameter to get tile state.
+.
+.
+
 ```
