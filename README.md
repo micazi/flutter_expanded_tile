@@ -22,7 +22,7 @@ $ flutter pub get
 ### 3. Import it
 
 ```
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
 ```
 
 ## Example
