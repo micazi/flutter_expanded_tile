@@ -75,11 +75,12 @@ ExpandedTile(
 
 | Property                                        | Description                                       | Default                                                                  |
 | ----------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------ |
-| **@required Text** title                        | Text Widget representing the title of the tile    | **@required**                                                            |
+| **@required Widget** title                      | Widget to use into the title of the tile          | **@required**                                                            |
 | **@required Widget** content                    | Content which expands                             | **@required**                                                            |
 | **@required ExpandedTileController** controller | Tile Controller                                   | **@required**                                                            |
 | **Widget** leading                              | leading widget before the title                   | null                                                                     |
 | **Icon** expandedIcon                           | ..                                                | !checkable? Icon(Icons.keyboard_arrow_right, color: Colors.black) : null |
+| **bool** showTrailingIcon                       | Show or hide the trailing icon                    | true                                                                     |
 | **bool** centerTitle                            | ..                                                | false                                                                    |
 | **bool** rotateExpandedIcon                     | ..                                                | !checkable? true : false                                                 |
 | **bool** checkable                              | Wheather tile has a checkbox or not.              | false                                                                    |
