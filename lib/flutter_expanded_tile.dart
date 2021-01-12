@@ -12,10 +12,11 @@ class ExpandedTile extends StatefulWidget {
   // leading
   final Widget leading;
   // title
-  final Text title;
+  final Widget title;
   final bool centerHeaderTitle;
   final EdgeInsetsGeometry titlePadding;
   // trailing
+  final bool showTrailingIcon;
   final Icon expandIcon;
   final bool rotateExpandIcon;
   // Checkbox
@@ -48,6 +49,7 @@ class ExpandedTile extends StatefulWidget {
     this.centerHeaderTitle = false,
     this.titlePadding = const EdgeInsets.all(8),
     // trailing
+    this.showTrailingIcon = true,
     this.checkable = false,
     this.expandIcon,
     this.rotateExpandIcon = true,
@@ -123,26 +125,29 @@ class _ExpandedTileState extends State<ExpandedTile>
                         child: widget.title,
                       ),
                     ),
-                    Transform.rotate(
-                      angle: widget.checkable
-                          ? 0
-                          : widget.rotateExpandIcon
-                              ? _isExpanded ? math.pi / 2 : 0
-                              : 0,
-                      child: widget.checkable
-                          ? Checkbox(
-                              checkColor: widget.checkBoxColor,
-                              activeColor: widget.checkBoxActiveColor,
-                              value: checkboxValue,
-                              onChanged: (v) {
-                                setState(() {
-                                  checkboxValue = v;
-                                  if (widget.onChecked != null)
-                                    return widget.onChecked(v);
-                                });
-                              })
-                          : widget.expandIcon ??
-                              Icon(Icons.keyboard_arrow_right),
+                    Visibility(
+                      visible: widget.showTrailingIcon,
+                      child: Transform.rotate(
+                        angle: widget.checkable
+                            ? 0
+                            : widget.rotateExpandIcon
+                                ? _isExpanded ? math.pi / 2 : 0
+                                : 0,
+                        child: widget.checkable
+                            ? Checkbox(
+                                checkColor: widget.checkBoxColor,
+                                activeColor: widget.checkBoxActiveColor,
+                                value: checkboxValue,
+                                onChanged: (v) {
+                                  setState(() {
+                                    checkboxValue = v;
+                                    if (widget.onChecked != null)
+                                      return widget.onChecked(v);
+                                  });
+                                })
+                            : widget.expandIcon ??
+                                Icon(Icons.keyboard_arrow_right),
+                      ),
                     ),
                   ],
                 ),
