@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ExpandedTileController extends ChangeNotifier {
-  bool isExpanded;
+  bool? isExpanded;
   void expand() {
     // need to expand the tile
     isExpanded = true;
@@ -16,7 +16,7 @@ class ExpandedTileController extends ChangeNotifier {
 
   void toggle() {
     if (isExpanded == null) isExpanded = false;
-    isExpanded = !isExpanded;
+    isExpanded = !isExpanded!;
     notifyListeners();
     // need to toggle the tile
   }

@@ -10,20 +10,20 @@ class ExpandedTile extends StatefulWidget {
   final Color headerSplashColor;
   final EdgeInsetsGeometry headerPadding;
   // leading
-  final Widget leading;
+  final Widget? leading;
   // title
   final Widget title;
   final bool centerHeaderTitle;
   final EdgeInsetsGeometry titlePadding;
   // trailing
   final bool showTrailingIcon;
-  final Icon expandIcon;
+  final Icon? expandIcon;
   final bool rotateExpandIcon;
   // Checkbox
   final bool checkable;
   final Color checkBoxColor;
   final Color checkBoxActiveColor;
-  final Function(bool value) onChecked;
+  final Function(bool? value)? onChecked;
   // Content
   final Widget content;
   final Color contentBackgroundColor;
@@ -36,9 +36,9 @@ class ExpandedTile extends StatefulWidget {
   const ExpandedTile({
     key,
     // Requirds
-    @required this.title,
-    @required this.content,
-    @required this.controller,
+    required this.title,
+    required this.content,
+    required this.controller,
     // header
     this.headerColor = const Color(0xfffafafa),
     this.headerSplashColor = const Color(0xffeeeeee),
@@ -72,9 +72,9 @@ class ExpandedTile extends StatefulWidget {
 
 class _ExpandedTileState extends State<ExpandedTile>
     with SingleTickerProviderStateMixin {
-  ExpandedTileController tileController;
-  bool _isExpanded;
-  bool checkboxValue;
+  late ExpandedTileController tileController;
+  bool? _isExpanded;
+  bool? checkboxValue;
   @override
   void initState() {
     _isExpanded = false;
@@ -115,7 +115,7 @@ class _ExpandedTileState extends State<ExpandedTile>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    if (widget.leading != null) widget.leading,
+                    if (widget.leading != null) widget.leading!,
                     Expanded(
                       child: Container(
                         padding: widget.titlePadding,
@@ -131,7 +131,9 @@ class _ExpandedTileState extends State<ExpandedTile>
                         angle: widget.checkable
                             ? 0
                             : widget.rotateExpandIcon
-                                ? _isExpanded ? math.pi / 2 : 0
+                                ? _isExpanded!
+                                    ? math.pi / 2
+                                    : 0
                                 : 0,
                         child: widget.checkable
                             ? Checkbox(
@@ -142,7 +144,7 @@ class _ExpandedTileState extends State<ExpandedTile>
                                   setState(() {
                                     checkboxValue = v;
                                     if (widget.onChecked != null)
-                                      return widget.onChecked(v);
+                                      return widget.onChecked!(v);
                                   });
                                 })
                             : widget.expandIcon ??
@@ -161,7 +163,7 @@ class _ExpandedTileState extends State<ExpandedTile>
             curve: widget.expansionAnimationCurve,
             child: Container(
               child: Container(
-                child: !_isExpanded
+                child: !_isExpanded!
                     ? null
                     : Container(
                         padding: widget.contentPadding,
