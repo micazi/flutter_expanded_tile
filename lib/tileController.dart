@@ -1,9 +1,11 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 class ExpandedTileController extends ChangeNotifier {
-  bool isExpanded;
+  bool isExpanded = false;
+
   void expand() {
-    // need to expand the tile
     isExpanded = true;
     notifyListeners();
   }
@@ -11,11 +13,9 @@ class ExpandedTileController extends ChangeNotifier {
   void collapse() {
     isExpanded = false;
     notifyListeners();
-    // need to collapse the tile
   }
 
   void toggle() {
-    if (isExpanded == null) isExpanded = false;
     isExpanded = !isExpanded;
     notifyListeners();
     // need to toggle the tile

@@ -1,5 +1,4 @@
 ```
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
 
@@ -24,7 +23,7 @@ class Example extends StatefulWidget {
 
 class _ExampleState extends State<Example> {
   // Controller
-  ExpandedTileController _controller;
+  late ExpandedTileController _controller;
 
   void initState() {
     // initialize controller
@@ -36,29 +35,28 @@ class _ExampleState extends State<Example> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: ExpandedTile(
-                controller: _controller,
-                checkable: false, // check box enabled or not
-                leading: Icon(Icons.menu),
-                centerHeaderTitle: false,
-                title: Text(
-                  "With Leading.",
-                  style: TextStyle(
-                    color: Colors.grey[800],
-                  ),
-                ),
-                content: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Text("text1"),
-                      Text("text2"),
-                    ],
-                  ),
-                ),
-                contentBackgroundColor: Colors.green[100],
+      body:
+          Center(
+            child: ExpandedTile(
+              theme: const ExpandedTileThemeData(
+                headerColor: Colors.green,
+                headerRadius: 24.0,
+                headerPadding: EdgeInsets.all(24.0),
+                headerSplashColor: Colors.red,
+                contentBackgroundColor: Colors.blue,
+                contentPadding: EdgeInsets.all(24.0),
+                contentRadius: 12.0,
               ),
-      ),
+              controller: _controller,
+              title: const Text("this is the title"),
+              content: Container(
+                color: Colors.red,
+                child: const Center(
+                  child: Text("This is the content!"),
+                ),
+              ),
+            ),
+          ),
     );
   }
 }
@@ -70,6 +68,7 @@ Expand function
 Collapse function
 Toggle function
 isExpanded parameter to get tile state.
+// If you are going to use in a ListView builder, assign a controller constructor [ExpandedTileController()] not an initialized one.
 .
 .
 

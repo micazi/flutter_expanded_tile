@@ -25,86 +25,27 @@ $ flutter pub get
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
 ```
 
-## Example
+## Demo
 
 ![](example/demo.gif)
 
-```
-.
-.
- // Controller
-  ExpandedTileController _controller;
-
-  void initState() {
-    // initialize controller
-    _controller = ExpandedTileController();
-    super.initState();
-  }
-  .
-  .
-ExpandedTile(
-                controller: _controller,
-                checkable: true, // check box enabled or not
-                leading: Icon(Icons.menu),
-                centerHeaderTitle: false,
-                title: Text(
-                  "With Leading.",
-                  style: TextStyle(
-                    color: Colors.grey[800],
-                  ),
-                ),
-                content: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Text("text1"),
-                      Text("text2"),
-                    ],
-                  ),
-                ),
-                contentBackgroundColor: Colors.green[100],
-                onChecked(bool v){
-                  log("$v");
-                },
-              ),
-.
-.
-
-```
+See Example page for example code.
 
 ## Usage
 
-| Property                                        | Description                                       | Default                                                                  |
-| ----------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------ |
-| **@required Text** title                        | Text Widget representing the title of the tile    | **@required**                                                            |
-| **@required Widget** content                    | Content which expands                             | **@required**                                                            |
-| **@required ExpandedTileController** controller | Tile Controller                                   | **@required**                                                            |
-| **Widget** leading                              | leading widget before the title                   | null                                                                     |
-| **Icon** expandedIcon                           | ..                                                | !checkable? Icon(Icons.keyboard_arrow_right, color: Colors.black) : null |
-| **bool** centerTitle                            | ..                                                | false                                                                    |
-| **bool** rotateExpandedIcon                     | ..                                                | !checkable? true : false                                                 |
-| **bool** checkable                              | Wheather tile has a checkbox or not.              | false                                                                    |
-| **Color** headerColor                           | ..                                                | Color(0xfffafafa)                                                        |
-| **Color** contentBackgroundColor                | ..                                                | Color(0xffeeeeee)                                                        |
-| **Color** headerSplashColor                     | ..                                                | Color(0xffeeeeee)                                                        |
-| **Color** checkBoxColor                         | check mark color                                  | Color(0xffffffff)                                                        |
-| **Color** checkBoxActiveColor                   | checkbox background color                         | Color(0xff039be5)                                                        |
-| **EdgeInsetsGeometry** titlePadding             | ..                                                | EdgeInsets.all(8)                                                        |
-| **EdgeInsetsGeometry** headerPadding            | ..                                                | EdgeInsets.all(16.0)                                                     |
-| **EdgeInsetsGeometry** contentPadding           | ..                                                | EdgeInsets.all(16.0)                                                     |
-| **Duration** expansionDuration                  | ..                                                | Duration(milliseconds: 200)                                              |
-| **Curve** expansionAnimationcurve               | ..                                                | Curves.ease                                                              |
-| **Function(bool value)** onChecked              | Listener callback for when checkbox value changes | null                                                                     |
-
-### Assertions
-
-- Must not set **checkable** as true and define **expandIcon**.
-- Must not set **checkable** as false and define **onChecked**.
-
-## Built With
-
-- Flutter - Beatiful native apps in record time.
-- Android Studio - Tools for building apps on every type of Android device.
-- Visual Studio Code - Code editing. Redefined.
+| Property                                        | Description                                     | Default                     |
+| ----------------------------------------------- | ----------------------------------------------- | --------------------------- |
+| **@required Text** title                        | Text Widget representing the title of the tile  | **@required**               |
+| **@required Widget** content                    | Content which expands                           | **@required**               |
+| **@required ExpandedTileController** controller | Tile Controller                                 | **@required**               |
+| **bool** centerHeaderTitle                      | ..                                              | false                       |
+| **Widget** leading                              | leading widget before the title                 | null                        |
+| **Widget** trailing                             | ..                                              | Icon(Icons.chevron_right)   |
+| **double** trailingRotation                     | Rotate trailing icon when expanded (in degrees) | 90                          |
+| **double** contentSeperator                     | Space between header and body                   | 6.0                         |
+| **@required ExpandedTileThemeData** controller  | Tile Theming                                    | ExpandedTileThemeData()     |
+| **Duration** expansionDuration                  | ..                                              | Duration(milliseconds: 200) |
+| **Curve** expansionAnimationcurve               | ..                                              | Curves.ease                 |
 
 ## Contributing
 
@@ -116,10 +57,11 @@ I will try to keep adding suggested features as i go.
 - **V0.1.0** - Initial Release.
 - **V0.2.0** - Added controller for programatic expansion and checkbox functionality.
 - **V0.2.1** - Added onChecked callback.
+- **V0.3.0** - Added Null Safety, Changed some customization properties, Removed checkbox trailing widget as it is possible to implement with a widget,and fixed some bugs.
 
 ## Authors
 
-**Michael Aziz** - [Github](https://github.com/micwaziz)
+**Michael Aziz (Micazi)** - [Github](https://github.com/micazi)
 
 ## License
 

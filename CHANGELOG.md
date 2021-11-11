@@ -3,3 +3,5 @@
 ## [0.2.0] - Added controller for programatic expansion and checkbox functionality.
 
 ## [0.2.1] - Added onChecked callback.
+
+## [0.3.0] - Added Null Safety, Changed some customization properties, Removed checkbox trailing widget as it is possible to implement with a widget,and fixed some bugs.
