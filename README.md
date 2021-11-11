@@ -33,19 +33,18 @@ See Example page for example code.
 
 ## Usage
 
-| Property                                        | Description                                     | Default                     |
-| ----------------------------------------------- | ----------------------------------------------- | --------------------------- |
-| **@required Text** title                        | Text Widget representing the title of the tile  | **@required**               |
-| **@required Widget** content                    | Content which expands                           | **@required**               |
-| **@required ExpandedTileController** controller | Tile Controller                                 | **@required**               |
-| **bool** centerHeaderTitle                      | ..                                              | false                       |
-| **Widget** leading                              | leading widget before the title                 | null                        |
-| **Widget** trailing                             | ..                                              | Icon(Icons.chevron_right)   |
-| **double** trailingRotation                     | Rotate trailing icon when expanded (in degrees) | 90                          |
-| **double** contentSeperator                     | Space between header and body                   | 6.0                         |
-| **@required ExpandedTileThemeData** controller  | Tile Theming                                    | ExpandedTileThemeData()     |
-| **Duration** expansionDuration                  | ..                                              | Duration(milliseconds: 200) |
-| **Curve** expansionAnimationcurve               | ..                                              | Curves.ease                 |
+| Property                                        | Description                                                     | Default                     |
+| ----------------------------------------------- | --------------------------------------------------------------- | --------------------------- |
+| **@required Widget** title                      | Widget representing the title of the tile, mostly a Text widget | **@required**               |
+| **@required Widget** content                    | Content which expands                                           | **@required**               |
+| **@required ExpandedTileController** controller | Tile Controller                                                 | **@required**               |
+| **Widget** leading                              | leading widget before the title                                 | null                        |
+| **Widget** trailing                             | ..                                                              | Icon(Icons.chevron_right)   |
+| **double** trailingRotation                     | Rotate trailing icon when expanded (in degrees)                 | 90                          |
+| **double** contentSeperator                     | Space between header and body                                   | 6.0                         |
+| **@required ExpandedTileThemeData** controller  | Tile Theming                                                    | ExpandedTileThemeData()     |
+| **Duration** expansionDuration                  | ..                                                              | Duration(milliseconds: 200) |
+| **Curve** expansionAnimationcurve               | ..                                                              | Curves.ease                 |
 
 ## Contributing
 

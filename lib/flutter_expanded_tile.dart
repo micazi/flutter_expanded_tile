@@ -12,8 +12,7 @@ class ExpandedTile extends StatefulWidget {
 // Leading
   final Widget? leading; // default is none
 // Title
-  final Text title; // required
-  final bool? centerHeaderTitle; // default is false
+  final Widget title; // required
 // Trailing
   final Widget? trailing; // default is chevron icon
   final double? trailingRotation; // default is 90
@@ -32,7 +31,6 @@ class ExpandedTile extends StatefulWidget {
     this.leading,
 // Title
     required this.title,
-    this.centerHeaderTitle = false,
 // Trailing
     this.trailing = const Icon(Icons.chevron_right),
     this.trailingRotation = 90,
@@ -113,9 +111,6 @@ class _ExpandedTileState extends State<ExpandedTile>
                   Expanded(
                     child: Container(
                       padding: widget.theme!.titlePadding,
-                      alignment: widget.centerHeaderTitle!
-                          ? Alignment.center
-                          : Alignment.centerLeft,
                       child: widget.title,
                     ),
                   ),

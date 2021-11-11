@@ -18,6 +18,5 @@ class ExpandedTileController extends ChangeNotifier {
   void toggle() {
     isExpanded = !isExpanded;
     notifyListeners();
-    // need to toggle the tile
   }
 }
