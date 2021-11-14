@@ -24,6 +24,8 @@ class ExpandedTile extends StatefulWidget {
   final ExpandedTileController controller; // required
   final Curve? expansionAnimationCurve; // default is ease
   final Duration? expansionDuration; // default is 200ms
+  final VoidCallback? onTap;
+  final VoidCallback? onLongTap;
   const ExpandedTile({
     key,
 ////? Header
@@ -43,6 +45,8 @@ class ExpandedTile extends StatefulWidget {
     this.theme = const ExpandedTileThemeData(),
     this.expansionDuration = const Duration(milliseconds: 200),
     this.expansionAnimationCurve = Curves.ease,
+    this.onTap,
+    this.onLongTap,
     // Misc
   }) : super(key: key);
   @override
@@ -56,14 +60,14 @@ class _ExpandedTileState extends State<ExpandedTile>
   @override
   void initState() {
     tileController = widget.controller;
+    _isExpanded = tileController.isExpanded;
     tileController.addListener(() {
       if (mounted) {
         setState(() {
-          _isExpanded = tileController.isExpanded;
+          _isExpanded = widget.controller.isExpanded;
         });
       }
     });
-    _isExpanded = false;
     super.initState();
   }
 
@@ -92,6 +96,14 @@ class _ExpandedTileState extends State<ExpandedTile>
             splashColor: widget.theme!.headerSplashColor,
             onTap: () {
               tileController.toggle();
+              if (widget.onTap != null) {
+                return widget.onTap!();
+              }
+            },
+            onLongPress: () {
+              if (widget.onLongTap != null) {
+                return widget.onLongTap!();
+              }
             },
             child: Container(
               decoration: BoxDecoration(

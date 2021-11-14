@@ -55,6 +55,12 @@ class _ExampleState extends State<Example> {
                   child: Text("This is the content!"),
                 ),
               ),
+               onTap: () {
+            debugPrint("tapped!!");
+          },
+          onLongTap: () {
+            debugPrint("long tapped!!");
+          },
             ),
           ),
     );

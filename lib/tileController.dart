@@ -3,20 +3,30 @@
 import 'package:flutter/material.dart';
 
 class ExpandedTileController extends ChangeNotifier {
-  bool isExpanded = false;
+  bool _isExpanded;
+  bool get isExpanded => _isExpanded;
+
+  set _setExpanded(bool ex) {
+    _isExpanded = ex;
+    notifyListeners();
+  }
+
+  ExpandedTileController({
+    bool isExpanded = false,
+  }) : _isExpanded = isExpanded;
 
   void expand() {
-    isExpanded = true;
+    _setExpanded = true;
     notifyListeners();
   }
 
   void collapse() {
-    isExpanded = false;
+    _setExpanded = false;
     notifyListeners();
   }
 
   void toggle() {
-    isExpanded = !isExpanded;
+    _setExpanded = !isExpanded;
     notifyListeners();
   }
 }
