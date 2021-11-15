@@ -27,7 +27,7 @@ class _ExampleState extends State<Example> {
 
   void initState() {
     // initialize controller
-    _controller = ExpandedTileController();
+    _controller = ExpandedTileController(isExpanded:true);
     super.initState();
   }
 

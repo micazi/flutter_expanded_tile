@@ -7,3 +7,5 @@
 ## [0.3.0] - Added Null Safety, Changed some customization properties, Removed checkbox trailing widget as it is possible to implement with a widget,and fixed some bugs.
 
 ## [0.3.2] - Added initial expansion state to the controller and Tap callbacks to the widget.
+
+## [0.3.3] - Added Documentations and refactored code.

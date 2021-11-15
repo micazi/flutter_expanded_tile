@@ -33,18 +33,28 @@ See Example page for example code.
 
 ## Usage
 
-| Property                                        | Description                                                     | Default                     |
-| ----------------------------------------------- | --------------------------------------------------------------- | --------------------------- |
-| **@required Widget** title                      | Widget representing the title of the tile, mostly a Text widget | **@required**               |
-| **@required Widget** content                    | Content which expands                                           | **@required**               |
-| **@required ExpandedTileController** controller | Tile Controller                                                 | **@required**               |
-| **Widget** leading                              | leading widget before the title                                 | null                        |
-| **Widget** trailing                             | ..                                                              | Icon(Icons.chevron_right)   |
-| **double** trailingRotation                     | Rotate trailing icon when expanded (in degrees)                 | 90                          |
-| **double** contentSeperator                     | Space between header and body                                   | 6.0                         |
-| **@required ExpandedTileThemeData** controller  | Tile Theming                                                    | ExpandedTileThemeData()     |
-| **Duration** expansionDuration                  | ..                                                              | Duration(milliseconds: 200) |
-| **Curve** expansionAnimationcurve               | ..                                                              | Curves.ease                 |
+| Property                                        | Description                                                     | Default                       |
+| ----------------------------------------------- | --------------------------------------------------------------- | ----------------------------- |
+| **@required Widget** title                      | Widget representing the title of the tile, mostly a Text widget | **@required**                 |
+| **@required Widget** content                    | Content which expands                                           | **@required**                 |
+| **@required ExpandedTileController** controller | Tile Controller                                                 | **@required**                 |
+| **VoidCallback** onTap                          | on tap callback                                                 | (){ tileController.toggle();} |
+| **VoidCallback** onLongTap                      | on tap and hold callback                                        | (){}                          |
+| **Widget** leading                              | leading widget before the title                                 | null                          |
+| **Widget** trailing                             | ..                                                              | Icon(Icons.chevron_right)     |
+| **double** trailingRotation                     | Rotate trailing icon when expanded (in degrees)                 | 90                            |
+| **double** contentSeperator                     | Space between header and body                                   | 6.0                           |
+| **@required ExpandedTileThemeData** controller  | Tile Theming                                                    | ExpandedTileThemeData()       |
+| **Duration** expansionDuration                  | ..                                                              | Duration(milliseconds: 200)   |
+| **Curve** expansionAnimationcurve               | ..                                                              | Curves.ease                   |
+
+## ToDo list
+
+[x] Adding Null Safety.
+
+[x] Adding Tap Callbacks.
+
+[] Adding Listview widget with available controller for certain index.
 
 ## Contributing
 
@@ -58,6 +68,7 @@ I will try to keep adding suggested features as i go.
 - **V0.2.1** - Added onChecked callback.
 - **V0.3.0** - Added Null Safety, Changed some customization properties, Removed checkbox trailing widget as it is possible to implement with a widget,and fixed some bugs.
 - **V0.3.2** - Added initial expansion state to the controller and Tap callbacks to the widget.
+- **V0.3.3** - Added Documentations and refactored code.
 
 ## Authors
 
