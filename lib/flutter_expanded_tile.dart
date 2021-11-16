@@ -47,7 +47,16 @@ class ExpandedTileController extends ChangeNotifier {
     notifyListeners();
   }
 
+  ExpandedTileController copyWith({
+    bool? isExpanded,
+  }) {
+    return ExpandedTileController(
+      isExpanded: isExpanded ?? _isExpanded,
+    );
+  }
+
   ExpandedTileController({
+    int? key,
     bool isExpanded = false,
   }) : _isExpanded = isExpanded;
 
@@ -193,6 +202,55 @@ class ExpandedTile extends StatefulWidget {
     this.onLongTap,
     // Misc
   }) : super(key: key);
+
+  /// Returns a new [ExpandedTile] widget with the same arguments unless stated otherwise.
+  ///
+  ///
+  ExpandedTile copyWith({
+    ////? Header
+// Leading
+    final Widget? leading, // default is none
+// Title
+    final Widget? title, // required
+// Trailing
+    final Widget? trailing, // default is chevron icon
+    final double? trailingRotation, // default is 90
+////? Content
+    final Widget? content, // required
+    final double? contentSeperator, // default is 6.0
+////? Misc
+    final ExpandedTileThemeData? theme, // default themedata
+    final ExpandedTileController? controller, // required
+    final Curve? expansionAnimationCurve, // default is ease
+    final Duration? expansionDuration, // default is 200ms
+    final VoidCallback? onTap,
+    final VoidCallback? onLongTap,
+  }) {
+    return ExpandedTile(
+      key: key,
+////? Header
+// Leading
+      leading: leading ?? this.leading,
+// Title
+      title: title ?? this.title,
+// Trailing
+      trailing: trailing ?? this.trailing,
+      trailingRotation: trailingRotation ?? this.trailingRotation,
+////? Content
+      content: content ?? this.content,
+      contentSeperator: contentSeperator ?? this.contentSeperator,
+////? Misc
+      controller: controller ?? this.controller,
+      theme: theme ?? this.theme,
+      expansionDuration: expansionDuration ?? this.expansionDuration,
+      expansionAnimationCurve:
+          expansionAnimationCurve ?? this.expansionAnimationCurve,
+      onTap: onTap ?? this.onTap,
+      onLongTap: onLongTap ?? this.onLongTap,
+      // Misc
+    );
+  }
+
   @override
   _ExpandedTileState createState() => _ExpandedTileState();
 }
@@ -309,6 +367,113 @@ class _ExpandedTileState extends State<ExpandedTile>
           ),
         ),
       ],
+    );
+  }
+}
+
+typedef ExpandedTileBuilder = ExpandedTile Function(
+    BuildContext context, int index, ExpandedTileController controller);
+
+/// An extension of the listview returning a list of [ExpandedTile] widgets which are
+/// Expansion tile similar to the list tile supports leading widget,
+/// Trailing widget and programatic control with content expansion animation.
+/// This ListView also supports seperate controllers for each tile with seperate programatic controls
+///
+/// P.S : Supplied Controllers are overlooked in the [ExpandedTileList] builder widget, supply a new or initialized controller, it doesn't matter!
+///
+/// {@tool snippet}
+///
+/// ```dart
+/// ExpandedTileList.builder(
+///  itemCount: 7,
+///  maxOpened: 2,
+///   itemBuilder: (context, index, controller) {
+///     return ExpandedTile(
+///       controller:controller,
+///       onTap: (){
+///       },
+///       onLongTap: (){
+///       },
+///       theme: ExpandedTileThemeData(),
+///       title:
+///       content:
+///       ...
+///   }
+/// )
+///
+/// ```
+/// {@end-tool}
+class ExpandedTileList extends StatefulWidget {
+  final bool reverse;
+  final ScrollPhysics? physics;
+  final EdgeInsetsGeometry? padding;
+  final ExpandedTileBuilder itemBuilder;
+  final int itemCount;
+  final String? restorationId;
+  final int maxOpened;
+  const ExpandedTileList.builder({
+    Key? key,
+    required this.itemCount,
+    required this.itemBuilder,
+    this.padding,
+    this.physics,
+    this.restorationId,
+    this.reverse = false,
+    this.maxOpened = 1,
+  })  : assert(itemCount != 0),
+        assert(maxOpened != 0),
+        super(key: key);
+
+  @override
+  _ExpandedTileListState createState() => _ExpandedTileListState();
+}
+
+class _ExpandedTileListState extends State<ExpandedTileList> {
+  late List<ExpandedTileController> tileControllers;
+  late List<ExpandedTileController> openedTilesControllers;
+  late ScrollController scrollController;
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+    tileControllers = List.generate(
+      widget.itemCount,
+      (index) => ExpandedTileController(key: index),
+    );
+    openedTilesControllers = [];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      controller: scrollController,
+      itemCount: widget.itemCount,
+      reverse: widget.reverse,
+      physics: widget.physics,
+      padding: widget.padding,
+      itemBuilder: (context, index) {
+        return widget
+            .itemBuilder(
+              context,
+              index,
+              tileControllers[index],
+            )
+            .copyWith(
+                controller: tileControllers[index],
+                onTap: () {
+                  int openedTiles = openedTilesControllers.length;
+                  if (tileControllers[index].isExpanded) {
+                    if (openedTiles == widget.maxOpened) {
+                      openedTilesControllers.last.collapse();
+                      openedTilesControllers
+                          .remove(openedTilesControllers.last);
+                    }
+                    openedTilesControllers.add(tileControllers[index]);
+                  } else {
+                    openedTilesControllers.remove(tileControllers[index]);
+                  }
+                });
+      },
     );
   }
 }

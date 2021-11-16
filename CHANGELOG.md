@@ -9,3 +9,5 @@
 ## [0.3.2] - Added initial expansion state to the controller and Tap callbacks to the widget.
 
 ## [0.3.3] - Added Documentations and refactored code.
+
+## [0.3.4] - Added ExpandedTileList widget.

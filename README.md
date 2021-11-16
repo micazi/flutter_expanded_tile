@@ -25,13 +25,15 @@ $ flutter pub get
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
 ```
 
-## Demo
+## Example
 
 ![](example/demo.gif)
 
 See Example page for example code.
 
 ## Usage
+
+### -- ExpandedTile
 
 | Property                                        | Description                                                     | Default                       |
 | ----------------------------------------------- | --------------------------------------------------------------- | ----------------------------- |
@@ -48,13 +50,25 @@ See Example page for example code.
 | **Duration** expansionDuration                  | ..                                                              | Duration(milliseconds: 200)   |
 | **Curve** expansionAnimationcurve               | ..                                                              | Curves.ease                   |
 
+### -- ExpandedTileList.builder()
+
+| Property                                      | Description                                                                            | Default                  |
+| --------------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------ |
+| **@required int** itemCount                   | count of tiles                                                                         | **@required**            |
+| **@required ExpandedTileBuilder** itemBuilder | Function with supplied context,index and controller to return an _ExpandedTile_ widget | **@required**            |
+| **bool** reverse                              | reverse list order                                                                     | false                    |
+| **EdgeInsetsGeometry** padding                | ListView Padding                                                                       | default ListView Padding |
+| **ScrollPhysics** physics                     | leading widget before the title                                                        | default ListView physics |
+| **String** restorationId                      | ..                                                                                     | ..                       |
+| **int** maxOpened                             | max number of opened tiles at the same time                                            | 1                        |
+
 ## ToDo list
 
 [x] Adding Null Safety.
 
 [x] Adding Tap Callbacks.
 
-[] Adding Listview widget with available controller for certain index.
+[x] Adding Listview widget with available controller for certain index.
 
 ## Contributing
 
@@ -69,6 +83,7 @@ I will try to keep adding suggested features as i go.
 - **V0.3.0** - Added Null Safety, Changed some customization properties, Removed checkbox trailing widget as it is possible to implement with a widget,and fixed some bugs.
 - **V0.3.2** - Added initial expansion state to the controller and Tap callbacks to the widget.
 - **V0.3.3** - Added Documentations and refactored code.
+- **V0.3.4** - Added ExpandedTileList widget.
 
 ## Authors
 
