@@ -62,6 +62,10 @@ See Example page for example code.
 | **String** restorationId                      | ..                                                                                     | ..                       |
 | **int** maxOpened                             | max number of opened tiles at the same time                                            | 1                        |
 
+### -- ExpandedTileList.seperated()
+
+    same as the **.builder** constructor but with the added seperator builder.
+
 ## ToDo list
 
 [x] Adding Null Safety.
@@ -69,6 +73,8 @@ See Example page for example code.
 [x] Adding Tap Callbacks.
 
 [x] Adding Listview widget with available controller for certain index.
+
+[x] Adding new _seperated_ constructor to the **ExpandedTileList** widget.
 
 ## Contributing
 
@@ -84,6 +90,7 @@ I will try to keep adding suggested features as i go.
 - **V0.3.2** - Added initial expansion state to the controller and Tap callbacks to the widget.
 - **V0.3.3** - Added Documentations and refactored code.
 - **V0.3.4** - Added ExpandedTileList widget.
+- **V0.3.4** - Added ExpandedTileList.seperated constructor to the ExpandedTileList widget.
 
 ## Authors
 

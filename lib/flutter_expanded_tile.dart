@@ -371,13 +371,24 @@ class _ExpandedTileState extends State<ExpandedTile>
   }
 }
 
+enum TileListConstructor {
+  builder,
+  seperated,
+}
+
 typedef ExpandedTileBuilder = ExpandedTile Function(
     BuildContext context, int index, ExpandedTileController controller);
 
 /// An extension of the listview returning a list of [ExpandedTile] widgets which are
 /// Expansion tile similar to the list tile supports leading widget,
 /// Trailing widget and programatic control with content expansion animation.
-/// This ListView also supports seperate controllers for each tile with seperate programatic controls
+///
+///
+/// This ListView also supports seperate controllers for each tile with seperate programatic controls.
+///
+///
+/// Available constructors right now: [ExpandedListTile.builder()] , [ExpandedListTile.seperated()]
+///
 ///
 /// P.S : Supplied Controllers are overlooked in the [ExpandedTileList] builder widget, supply a new or initialized controller, it doesn't matter!
 ///
@@ -405,12 +416,16 @@ typedef ExpandedTileBuilder = ExpandedTile Function(
 /// {@end-tool}
 class ExpandedTileList extends StatefulWidget {
   final bool reverse;
+  final bool shrinkWrap;
   final ScrollPhysics? physics;
   final EdgeInsetsGeometry? padding;
   final ExpandedTileBuilder itemBuilder;
+  final IndexedWidgetBuilder? seperatorBuilder;
   final int itemCount;
   final String? restorationId;
   final int maxOpened;
+  final TileListConstructor _constructor;
+
   const ExpandedTileList.builder({
     Key? key,
     required this.itemCount,
@@ -419,9 +434,28 @@ class ExpandedTileList extends StatefulWidget {
     this.physics,
     this.restorationId,
     this.reverse = false,
+    this.shrinkWrap = true,
     this.maxOpened = 1,
   })  : assert(itemCount != 0),
         assert(maxOpened != 0),
+        _constructor = TileListConstructor.builder,
+        seperatorBuilder = null,
+        super(key: key);
+
+  const ExpandedTileList.seperated({
+    Key? key,
+    required this.itemCount,
+    required this.itemBuilder,
+    required this.seperatorBuilder,
+    this.padding,
+    this.physics,
+    this.restorationId,
+    this.reverse = false,
+    this.shrinkWrap = true,
+    this.maxOpened = 1,
+  })  : assert(itemCount != 0),
+        assert(maxOpened != 0),
+        _constructor = TileListConstructor.seperated,
         super(key: key);
 
   @override
@@ -445,35 +479,74 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      controller: scrollController,
-      itemCount: widget.itemCount,
-      reverse: widget.reverse,
-      physics: widget.physics,
-      padding: widget.padding,
-      itemBuilder: (context, index) {
-        return widget
-            .itemBuilder(
-              context,
-              index,
-              tileControllers[index],
-            )
-            .copyWith(
-                controller: tileControllers[index],
-                onTap: () {
-                  int openedTiles = openedTilesControllers.length;
-                  if (tileControllers[index].isExpanded) {
-                    if (openedTiles == widget.maxOpened) {
-                      openedTilesControllers.last.collapse();
-                      openedTilesControllers
-                          .remove(openedTilesControllers.last);
-                    }
-                    openedTilesControllers.add(tileControllers[index]);
-                  } else {
-                    openedTilesControllers.remove(tileControllers[index]);
-                  }
-                });
-      },
-    );
+    return widget._constructor == TileListConstructor.builder
+        ? ListView.builder(
+            shrinkWrap: widget.shrinkWrap,
+            controller: scrollController,
+            itemCount: widget.itemCount,
+            reverse: widget.reverse,
+            physics: widget.physics,
+            padding: widget.padding,
+            itemBuilder: (context, index) {
+              return widget
+                  .itemBuilder(
+                    context,
+                    index,
+                    tileControllers[index],
+                  )
+                  .copyWith(
+                      controller: tileControllers[index],
+                      onTap: () {
+                        int openedTiles = openedTilesControllers.length;
+                        if (tileControllers[index].isExpanded) {
+                          if (openedTiles == widget.maxOpened) {
+                            openedTilesControllers.last.collapse();
+                            openedTilesControllers
+                                .remove(openedTilesControllers.last);
+                          }
+                          openedTilesControllers.add(tileControllers[index]);
+                        } else {
+                          openedTilesControllers.remove(tileControllers[index]);
+                        }
+                      });
+            },
+          )
+        : ListView.separated(
+            shrinkWrap: widget.shrinkWrap,
+            controller: scrollController,
+            itemCount: widget.itemCount,
+            reverse: widget.reverse,
+            physics: widget.physics,
+            padding: widget.padding,
+            separatorBuilder: (context, index) {
+              return widget.seperatorBuilder!(
+                context,
+                index,
+              );
+            },
+            itemBuilder: (context, index) {
+              return widget
+                  .itemBuilder(
+                    context,
+                    index,
+                    tileControllers[index],
+                  )
+                  .copyWith(
+                      controller: tileControllers[index],
+                      onTap: () {
+                        int openedTiles = openedTilesControllers.length;
+                        if (tileControllers[index].isExpanded) {
+                          if (openedTiles == widget.maxOpened) {
+                            openedTilesControllers.last.collapse();
+                            openedTilesControllers
+                                .remove(openedTilesControllers.last);
+                          }
+                          openedTilesControllers.add(tileControllers[index]);
+                        } else {
+                          openedTilesControllers.remove(tileControllers[index]);
+                        }
+                      });
+            },
+          );
   }
 }

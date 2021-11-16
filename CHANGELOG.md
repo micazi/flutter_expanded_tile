@@ -11,3 +11,5 @@
 ## [0.3.3] - Added Documentations and refactored code.
 
 ## [0.3.4] - Added ExpandedTileList widget.
+
+## [0.3.5] - Added ExpandedTileList.seperated constructor to the ExpandedTileList widget.
