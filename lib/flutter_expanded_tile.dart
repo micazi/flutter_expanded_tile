@@ -173,6 +173,7 @@ class ExpandedTile extends StatefulWidget {
   final Widget content; // required
   final double? contentSeperator; // default is 6.0
 ////? Misc
+  final bool enabled;
   final ExpandedTileThemeData? theme; // default themedata
   final ExpandedTileController controller; // required
   final Curve? expansionAnimationCurve; // default is ease
@@ -195,6 +196,7 @@ class ExpandedTile extends StatefulWidget {
     this.contentSeperator = 6.0,
 ////? Misc
     required this.controller,
+    this.enabled = true,
     this.theme = const ExpandedTileThemeData(),
     this.expansionDuration = const Duration(milliseconds: 200),
     this.expansionAnimationCurve = Curves.ease,
@@ -219,6 +221,7 @@ class ExpandedTile extends StatefulWidget {
     final Widget? content, // required
     final double? contentSeperator, // default is 6.0
 ////? Misc
+    final bool? enabled,
     final ExpandedTileThemeData? theme, // default themedata
     final ExpandedTileController? controller, // required
     final Curve? expansionAnimationCurve, // default is ease
@@ -240,6 +243,7 @@ class ExpandedTile extends StatefulWidget {
       content: content ?? this.content,
       contentSeperator: contentSeperator ?? this.contentSeperator,
 ////? Misc
+      enabled: enabled ?? this.enabled,
       controller: controller ?? this.controller,
       theme: theme ?? this.theme,
       expansionDuration: expansionDuration ?? this.expansionDuration,
@@ -296,17 +300,21 @@ class _ExpandedTileState extends State<ExpandedTile>
           child: InkWell(
             borderRadius: BorderRadius.circular(widget.theme!.headerRadius!),
             splashColor: widget.theme!.headerSplashColor,
-            onTap: () {
-              tileController.toggle();
-              if (widget.onTap != null) {
-                return widget.onTap!();
-              }
-            },
-            onLongPress: () {
-              if (widget.onLongTap != null) {
-                return widget.onLongTap!();
-              }
-            },
+            onTap: !widget.enabled
+                ? () {}
+                : () {
+                    tileController.toggle();
+                    if (widget.onTap != null) {
+                      return widget.onTap!();
+                    }
+                  },
+            onLongPress: !widget.enabled
+                ? () {}
+                : () {
+                    if (widget.onLongTap != null) {
+                      return widget.onLongTap!();
+                    }
+                  },
             child: Container(
               decoration: BoxDecoration(
                 borderRadius:
@@ -496,19 +504,29 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
                   )
                   .copyWith(
                       controller: tileControllers[index],
-                      onTap: () {
-                        int openedTiles = openedTilesControllers.length;
-                        if (tileControllers[index].isExpanded) {
-                          if (openedTiles == widget.maxOpened) {
-                            openedTilesControllers.last.collapse();
-                            openedTilesControllers
-                                .remove(openedTilesControllers.last);
-                          }
-                          openedTilesControllers.add(tileControllers[index]);
-                        } else {
-                          openedTilesControllers.remove(tileControllers[index]);
-                        }
-                      });
+                      onTap: !widget
+                              .itemBuilder(
+                                context,
+                                index,
+                                tileControllers[index],
+                              )
+                              .enabled
+                          ? () {}
+                          : () {
+                              int openedTiles = openedTilesControllers.length;
+                              if (tileControllers[index].isExpanded) {
+                                if (openedTiles == widget.maxOpened) {
+                                  openedTilesControllers.last.collapse();
+                                  openedTilesControllers
+                                      .remove(openedTilesControllers.last);
+                                }
+                                openedTilesControllers
+                                    .add(tileControllers[index]);
+                              } else {
+                                openedTilesControllers
+                                    .remove(tileControllers[index]);
+                              }
+                            });
             },
           )
         : ListView.separated(
@@ -533,19 +551,29 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
                   )
                   .copyWith(
                       controller: tileControllers[index],
-                      onTap: () {
-                        int openedTiles = openedTilesControllers.length;
-                        if (tileControllers[index].isExpanded) {
-                          if (openedTiles == widget.maxOpened) {
-                            openedTilesControllers.last.collapse();
-                            openedTilesControllers
-                                .remove(openedTilesControllers.last);
-                          }
-                          openedTilesControllers.add(tileControllers[index]);
-                        } else {
-                          openedTilesControllers.remove(tileControllers[index]);
-                        }
-                      });
+                      onTap: !widget
+                              .itemBuilder(
+                                context,
+                                index,
+                                tileControllers[index],
+                              )
+                              .enabled
+                          ? () {}
+                          : () {
+                              int openedTiles = openedTilesControllers.length;
+                              if (tileControllers[index].isExpanded) {
+                                if (openedTiles == widget.maxOpened) {
+                                  openedTilesControllers.last.collapse();
+                                  openedTilesControllers
+                                      .remove(openedTilesControllers.last);
+                                }
+                                openedTilesControllers
+                                    .add(tileControllers[index]);
+                              } else {
+                                openedTilesControllers
+                                    .remove(tileControllers[index]);
+                              }
+                            });
             },
           );
   }

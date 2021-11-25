@@ -40,6 +40,7 @@ See Example page for example code.
 | **@required Widget** title                      | Widget representing the title of the tile, mostly a Text widget | **@required**                 |
 | **@required Widget** content                    | Content which expands                                           | **@required**                 |
 | **@required ExpandedTileController** controller | Tile Controller                                                 | **@required**                 |
+| **bool** enabled                                | Expandable or not                                               | true                          |
 | **VoidCallback** onTap                          | on tap callback                                                 | (){ tileController.toggle();} |
 | **VoidCallback** onLongTap                      | on tap and hold callback                                        | (){}                          |
 | **Widget** leading                              | leading widget before the title                                 | null                          |
@@ -90,7 +91,8 @@ I will try to keep adding suggested features as i go.
 - **V0.3.2** - Added initial expansion state to the controller and Tap callbacks to the widget.
 - **V0.3.3** - Added Documentations and refactored code.
 - **V0.3.4** - Added ExpandedTileList widget.
-- **V0.3.4** - Added ExpandedTileList.seperated constructor to the ExpandedTileList widget.
+- **V0.3.5** - Added ExpandedTileList.seperated constructor to the ExpandedTileList widget.
+- **V0.3.6** - Added 'Enabled' Property to the Tile.
 
 ## Authors
 
