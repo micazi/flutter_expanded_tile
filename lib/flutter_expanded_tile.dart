@@ -365,20 +365,7 @@ class _ExpandedTileState extends State<ExpandedTile> with SingleTickerProviderSt
         ),
         //* Content
         widget.enableAnimation
-            ? Container(
-                child: !_isExpanded
-                    ? null
-                    : Container(
-                        decoration: BoxDecoration(
-                          color: widget.theme!.contentBackgroundColor,
-                          borderRadius: BorderRadius.circular(widget.theme!.contentRadius!),
-                        ),
-                        padding: widget.theme!.contentPadding,
-                        width: double.infinity,
-                        child: widget.content,
-                      ),
-              )
-            : AnimatedSize(
+            ? AnimatedSize(
                 duration: widget.expansionDuration!,
                 curve: widget.expansionAnimationCurve!,
                 child: Container(
@@ -394,6 +381,19 @@ class _ExpandedTileState extends State<ExpandedTile> with SingleTickerProviderSt
                           child: widget.content,
                         ),
                 ),
+              )
+            : Container(
+                child: !_isExpanded
+                    ? null
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: widget.theme!.contentBackgroundColor,
+                          borderRadius: BorderRadius.circular(widget.theme!.contentRadius!),
+                        ),
+                        padding: widget.theme!.contentPadding,
+                        width: double.infinity,
+                        child: widget.content,
+                      ),
               ),
       ],
     );
