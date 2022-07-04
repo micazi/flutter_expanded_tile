@@ -42,6 +42,7 @@ class ExpandedTileController extends ChangeNotifier {
 
   /// Getter for the current expansion state of the [ExpandedTile] widget.
   bool get isExpanded => _isExpanded;
+
   set _setExpanded(bool ex) {
     _isExpanded = ex;
     notifyListeners();
@@ -105,16 +106,21 @@ class ExpandedTileThemeData {
   final Color? headerSplashColor;
   final EdgeInsetsGeometry? headerPadding;
   final double? headerRadius;
+
   // leading
   final EdgeInsetsGeometry? leadingPadding;
+
   // title
   final EdgeInsetsGeometry? titlePadding;
+
   // trailing
   final EdgeInsetsGeometry? trailingPadding;
+
   ////? Content
   final Color? contentBackgroundColor;
   final EdgeInsetsGeometry? contentPadding;
   final double? contentRadius;
+
   const ExpandedTileThemeData({
     key,
     this.headerColor = const Color(0xfffafafa),
@@ -180,6 +186,7 @@ class ExpandedTile extends StatefulWidget {
   final Duration? expansionDuration; // default is 200ms
   final VoidCallback? onTap;
   final VoidCallback? onLongTap;
+  final bool enableAnimation; // default is true
   const ExpandedTile({
     key,
 ////? Header
@@ -202,6 +209,7 @@ class ExpandedTile extends StatefulWidget {
     this.expansionAnimationCurve = Curves.ease,
     this.onTap,
     this.onLongTap,
+    this.enableAnimation = true,
     // Misc
   }) : super(key: key);
 
@@ -228,6 +236,7 @@ class ExpandedTile extends StatefulWidget {
     final Duration? expansionDuration, // default is 200ms
     final VoidCallback? onTap,
     final VoidCallback? onLongTap,
+    final bool? enableAnimation,
   }) {
     return ExpandedTile(
       key: key,
@@ -247,10 +256,10 @@ class ExpandedTile extends StatefulWidget {
       controller: controller ?? this.controller,
       theme: theme ?? this.theme,
       expansionDuration: expansionDuration ?? this.expansionDuration,
-      expansionAnimationCurve:
-          expansionAnimationCurve ?? this.expansionAnimationCurve,
+      expansionAnimationCurve: expansionAnimationCurve ?? this.expansionAnimationCurve,
       onTap: onTap ?? this.onTap,
       onLongTap: onLongTap ?? this.onLongTap,
+      enableAnimation: enableAnimation ?? this.enableAnimation,
       // Misc
     );
   }
@@ -259,10 +268,10 @@ class ExpandedTile extends StatefulWidget {
   _ExpandedTileState createState() => _ExpandedTileState();
 }
 
-class _ExpandedTileState extends State<ExpandedTile>
-    with SingleTickerProviderStateMixin {
+class _ExpandedTileState extends State<ExpandedTile> with SingleTickerProviderStateMixin {
   late ExpandedTileController tileController;
   late bool _isExpanded;
+
   @override
   void initState() {
     tileController = widget.controller;
@@ -317,8 +326,7 @@ class _ExpandedTileState extends State<ExpandedTile>
                   },
             child: Container(
               decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(widget.theme!.headerRadius!),
+                borderRadius: BorderRadius.circular(widget.theme!.headerRadius!),
               ),
               padding: widget.theme!.headerPadding,
               child: Row(
@@ -356,24 +364,37 @@ class _ExpandedTileState extends State<ExpandedTile>
           height: widget.contentSeperator,
         ),
         //* Content
-        AnimatedSize(
-          duration: widget.expansionDuration!,
-          curve: widget.expansionAnimationCurve!,
-          child: Container(
-            child: !_isExpanded
-                ? null
-                : Container(
-                    decoration: BoxDecoration(
-                      color: widget.theme!.contentBackgroundColor,
-                      borderRadius:
-                          BorderRadius.circular(widget.theme!.contentRadius!),
-                    ),
-                    padding: widget.theme!.contentPadding,
-                    width: double.infinity,
-                    child: widget.content,
-                  ),
-          ),
-        ),
+        widget.enableAnimation
+            ? Container(
+                child: !_isExpanded
+                    ? null
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: widget.theme!.contentBackgroundColor,
+                          borderRadius: BorderRadius.circular(widget.theme!.contentRadius!),
+                        ),
+                        padding: widget.theme!.contentPadding,
+                        width: double.infinity,
+                        child: widget.content,
+                      ),
+              )
+            : AnimatedSize(
+                duration: widget.expansionDuration!,
+                curve: widget.expansionAnimationCurve!,
+                child: Container(
+                  child: !_isExpanded
+                      ? null
+                      : Container(
+                          decoration: BoxDecoration(
+                            color: widget.theme!.contentBackgroundColor,
+                            borderRadius: BorderRadius.circular(widget.theme!.contentRadius!),
+                          ),
+                          padding: widget.theme!.contentPadding,
+                          width: double.infinity,
+                          child: widget.content,
+                        ),
+                ),
+              ),
       ],
     );
   }
@@ -384,8 +405,7 @@ enum TileListConstructor {
   seperated,
 }
 
-typedef ExpandedTileBuilder = ExpandedTile Function(
-    BuildContext context, int index, ExpandedTileController controller);
+typedef ExpandedTileBuilder = ExpandedTile Function(BuildContext context, int index, ExpandedTileController controller);
 
 /// An extension of the listview returning a list of [ExpandedTile] widgets which are
 /// Expansion tile similar to the list tile supports leading widget,
@@ -474,6 +494,7 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
   late List<ExpandedTileController> tileControllers;
   late List<ExpandedTileController> openedTilesControllers;
   late ScrollController scrollController;
+
   @override
   void initState() {
     super.initState();
@@ -517,14 +538,11 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
                               if (tileControllers[index].isExpanded) {
                                 if (openedTiles == widget.maxOpened) {
                                   openedTilesControllers.last.collapse();
-                                  openedTilesControllers
-                                      .remove(openedTilesControllers.last);
+                                  openedTilesControllers.remove(openedTilesControllers.last);
                                 }
-                                openedTilesControllers
-                                    .add(tileControllers[index]);
+                                openedTilesControllers.add(tileControllers[index]);
                               } else {
-                                openedTilesControllers
-                                    .remove(tileControllers[index]);
+                                openedTilesControllers.remove(tileControllers[index]);
                               }
                             });
             },
@@ -564,14 +582,11 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
                               if (tileControllers[index].isExpanded) {
                                 if (openedTiles == widget.maxOpened) {
                                   openedTilesControllers.last.collapse();
-                                  openedTilesControllers
-                                      .remove(openedTilesControllers.last);
+                                  openedTilesControllers.remove(openedTilesControllers.last);
                                 }
-                                openedTilesControllers
-                                    .add(tileControllers[index]);
+                                openedTilesControllers.add(tileControllers[index]);
                               } else {
-                                openedTilesControllers
-                                    .remove(tileControllers[index]);
+                                openedTilesControllers.remove(tileControllers[index]);
                               }
                             });
             },
