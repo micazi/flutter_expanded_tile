@@ -177,7 +177,7 @@ class ExpandedTile extends StatefulWidget {
   final double? trailingRotation; // default is 90
 ////? Content
   final Widget content; // required
-  final double? contentSeperator; // default is 6.0
+  final double? contentSeparator; // default is 6.0
 ////? Misc
   final bool enabled;
   final ExpandedTileThemeData? theme; // default themedata
@@ -187,6 +187,13 @@ class ExpandedTile extends StatefulWidget {
   final VoidCallback? onTap;
   final VoidCallback? onLongTap;
   final bool enableAnimation; // default is true
+////? Checkbox
+  final bool checkable;
+  final bool isChecked;
+  final Color checkBoxColor;
+  final Color checkBoxActiveColor;
+  final Function(bool value)? onChecked;
+
   const ExpandedTile({
     key,
 ////? Header
@@ -200,7 +207,7 @@ class ExpandedTile extends StatefulWidget {
 
 ////? Content
     required this.content,
-    this.contentSeperator = 6.0,
+    this.contentSeparator = 6.0,
 ////? Misc
     required this.controller,
     this.enabled = true,
@@ -211,6 +218,12 @@ class ExpandedTile extends StatefulWidget {
     this.onLongTap,
     this.enableAnimation = true,
     // Misc
+////? Checkbox
+    this.isChecked = false,
+    this.checkable = false,
+    this.checkBoxColor = const Color(0xffffffff),
+    this.checkBoxActiveColor = const Color(0xff039be5),
+    this.onChecked,
   }) : super(key: key);
 
   /// Returns a new [ExpandedTile] widget with the same arguments unless stated otherwise.
@@ -227,7 +240,7 @@ class ExpandedTile extends StatefulWidget {
     final double? trailingRotation, // default is 90
 ////? Content
     final Widget? content, // required
-    final double? contentSeperator, // default is 6.0
+    final double? contentSeparator, // default is 6.0
 ////? Misc
     final bool? enabled,
     final ExpandedTileThemeData? theme, // default themedata
@@ -237,6 +250,11 @@ class ExpandedTile extends StatefulWidget {
     final VoidCallback? onTap,
     final VoidCallback? onLongTap,
     final bool? enableAnimation,
+    final bool? checkable,
+    final bool? isChecked,
+    final Color? checkBoxColor,
+    final Color? checkBoxActiveColor,
+    final Function(bool value)? onChecked,
   }) {
     return ExpandedTile(
       key: key,
@@ -250,7 +268,7 @@ class ExpandedTile extends StatefulWidget {
       trailingRotation: trailingRotation ?? this.trailingRotation,
 ////? Content
       content: content ?? this.content,
-      contentSeperator: contentSeperator ?? this.contentSeperator,
+      contentSeparator: contentSeparator ?? this.contentSeparator,
 ////? Misc
       enabled: enabled ?? this.enabled,
       controller: controller ?? this.controller,
@@ -260,6 +278,10 @@ class ExpandedTile extends StatefulWidget {
       onTap: onTap ?? this.onTap,
       onLongTap: onLongTap ?? this.onLongTap,
       enableAnimation: enableAnimation ?? this.enableAnimation,
+      checkable: checkable ?? this.checkable,
+      isChecked: isChecked ?? this.isChecked,
+      checkBoxColor: checkBoxColor ?? this.checkBoxColor,
+      onChecked: onChecked ?? this.onChecked,
       // Misc
     );
   }
@@ -271,6 +293,7 @@ class ExpandedTile extends StatefulWidget {
 class _ExpandedTileState extends State<ExpandedTile> with SingleTickerProviderStateMixin {
   late ExpandedTileController tileController;
   late bool _isExpanded;
+  late bool checkboxValue;
 
   @override
   void initState() {
@@ -283,6 +306,7 @@ class _ExpandedTileState extends State<ExpandedTile> with SingleTickerProviderSt
         });
       }
     });
+    checkboxValue = widget.isChecked;
     super.initState();
   }
 
@@ -344,24 +368,37 @@ class _ExpandedTileState extends State<ExpandedTile> with SingleTickerProviderSt
                       child: widget.title,
                     ),
                   ),
-                  Transform.rotate(
-                    angle: widget.trailingRotation != null
-                        ? _isExpanded
-                            ? angleToRad(widget.trailingRotation!)
-                            : 0
-                        : 0,
-                    child: Padding(
-                      padding: widget.theme!.trailingPadding!,
-                      child: widget.trailing,
-                    ),
-                  ),
+                  widget.checkable
+                      ? Checkbox(
+                          checkColor: widget.checkBoxColor,
+                          activeColor: widget.checkBoxActiveColor,
+                          value: checkboxValue,
+                          onChanged: (v) {
+                            setState(() {
+                              if (v != null) {
+                                checkboxValue = v;
+                                if (widget.onChecked != null) return widget.onChecked!(v);
+                              }
+                            });
+                          })
+                      : Transform.rotate(
+                          angle: widget.trailingRotation != null
+                              ? _isExpanded
+                                  ? angleToRad(widget.trailingRotation!)
+                                  : 0
+                              : 0,
+                          child: Padding(
+                            padding: widget.theme!.trailingPadding!,
+                            child: widget.trailing,
+                          ),
+                        ),
                 ],
               ),
             ),
           ),
         ),
         SizedBox(
-          height: widget.contentSeperator,
+          height: widget.contentSeparator,
         ),
         //* Content
         widget.enableAnimation
@@ -402,7 +439,7 @@ class _ExpandedTileState extends State<ExpandedTile> with SingleTickerProviderSt
 
 enum TileListConstructor {
   builder,
-  seperated,
+  separated,
 }
 
 typedef ExpandedTileBuilder = ExpandedTile Function(BuildContext context, int index, ExpandedTileController controller);
@@ -448,7 +485,7 @@ class ExpandedTileList extends StatefulWidget {
   final ScrollPhysics? physics;
   final EdgeInsetsGeometry? padding;
   final ExpandedTileBuilder itemBuilder;
-  final IndexedWidgetBuilder? seperatorBuilder;
+  final IndexedWidgetBuilder? separatorBuilder;
   final int itemCount;
   final String? restorationId;
   final int maxOpened;
@@ -467,14 +504,14 @@ class ExpandedTileList extends StatefulWidget {
   })  : assert(itemCount != 0),
         assert(maxOpened != 0),
         _constructor = TileListConstructor.builder,
-        seperatorBuilder = null,
+        separatorBuilder = null,
         super(key: key);
 
-  const ExpandedTileList.seperated({
+  const ExpandedTileList.separated({
     Key? key,
     required this.itemCount,
     required this.itemBuilder,
-    required this.seperatorBuilder,
+    required this.separatorBuilder,
     this.padding,
     this.physics,
     this.restorationId,
@@ -483,7 +520,7 @@ class ExpandedTileList extends StatefulWidget {
     this.maxOpened = 1,
   })  : assert(itemCount != 0),
         assert(maxOpened != 0),
-        _constructor = TileListConstructor.seperated,
+        _constructor = TileListConstructor.separated,
         super(key: key);
 
   @override
@@ -555,7 +592,7 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
             physics: widget.physics,
             padding: widget.padding,
             separatorBuilder: (context, index) {
-              return widget.seperatorBuilder!(
+              return widget.separatorBuilder!(
                 context,
                 index,
               );
