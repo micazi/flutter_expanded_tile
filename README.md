@@ -1,6 +1,6 @@
 # flutter_expanded_tile
 
-An Expansion tile similar to the list tile supports leading widget,checkbox option and programatic control with content expansion animation.
+An Expansion tile similar to the list tile supports leading widget,and programatic control with content expansion animation.
 
 ## Getting Started
 
@@ -46,8 +46,9 @@ See Example page for example code.
 | **Widget** leading                              | leading widget before the title                                 | null                          |
 | **Widget** trailing                             | ..                                                              | Icon(Icons.chevron_right)     |
 | **double** trailingRotation                     | Rotate trailing icon when expanded (in degrees)                 | 90                            |
-| **double** contentSeperator                     | Space between header and body                                   | 6.0                           |
+| **double** contentseparator                     | Space between header and body                                   | 6.0                           |
 | **@required ExpandedTileThemeData** controller  | Tile Theming                                                    | ExpandedTileThemeData()       |
+| **bool** disableAnimation                       | Disable Tile Animation                                          | false                         |
 | **Duration** expansionDuration                  | ..                                                              | Duration(milliseconds: 200)   |
 | **Curve** expansionAnimationcurve               | ..                                                              | Curves.ease                   |
 
@@ -63,9 +64,9 @@ See Example page for example code.
 | **String** restorationId                      | ..                                                                                     | ..                       |
 | **int** maxOpened                             | max number of opened tiles at the same time                                            | 1                        |
 
-### -- ExpandedTileList.seperated()
+### -- ExpandedTileList.separated()
 
-    same as the **.builder** constructor but with the added seperator builder.
+    same as the **.builder** constructor but with the added separator builder.
 
 ## ToDo list
 
@@ -75,7 +76,7 @@ See Example page for example code.
 
 [x] Adding Listview widget with available controller for certain index.
 
-[x] Adding new _seperated_ constructor to the **ExpandedTileList** widget.
+[x] Adding new _separated_ constructor to the **ExpandedTileList** widget.
 
 ## Contributing
 
@@ -91,8 +92,9 @@ I will try to keep adding suggested features as i go.
 - **V0.3.2** - Added initial expansion state to the controller and Tap callbacks to the widget.
 - **V0.3.3** - Added Documentations and refactored code.
 - **V0.3.4** - Added ExpandedTileList widget.
-- **V0.3.5** - Added ExpandedTileList.seperated constructor to the ExpandedTileList widget.
+- **V0.3.5** - Added ExpandedTileList.separated constructor to the ExpandedTileList widget.
 - **V0.3.6** - Added 'Enabled' Property to the Tile.
+- **V0.3.7** - Resolved some issues + Added 'disableAnimation' Property to the Tile.
 
 ## Authors
 

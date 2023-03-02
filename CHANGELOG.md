@@ -12,6 +12,8 @@
 
 ## [0.3.4] - Added ExpandedTileList widget.
 
-## [0.3.5] - Added ExpandedTileList.seperated constructor to the ExpandedTileList widget.
+## [0.3.5] - Added ExpandedTileList.separated constructor to the ExpandedTileList widget.
 
 ## [0.3.6] - Added 'Enabled' Property to the Tile.
+
+## [0.3.7] - Resolved some issues + Added 'disableAnimation' Property to the Tile.

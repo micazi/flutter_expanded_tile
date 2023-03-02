@@ -44,7 +44,6 @@ class ExpandedTileController extends ChangeNotifier {
   bool get isExpanded => _isExpanded;
   set _setExpanded(bool ex) {
     _isExpanded = ex;
-    notifyListeners();
   }
 
   ExpandedTileController copyWith({
@@ -74,8 +73,7 @@ class ExpandedTileController extends ChangeNotifier {
 
   /// VoidCallback that toggles the expansion state of the [ExpandedTile] widget.
   void toggle() {
-    _setExpanded = !isExpanded;
-    notifyListeners();
+    isExpanded ? collapse() : expand();
   }
 }
 
@@ -171,11 +169,12 @@ class ExpandedTile extends StatefulWidget {
   final double? trailingRotation; // default is 90
 ////? Content
   final Widget content; // required
-  final double? contentSeperator; // default is 6.0
+  final double? contentseparator; // default is 6.0
 ////? Misc
   final bool enabled;
   final ExpandedTileThemeData? theme; // default themedata
   final ExpandedTileController controller; // required
+  final bool? disableAnimation;
   final Curve? expansionAnimationCurve; // default is ease
   final Duration? expansionDuration; // default is 200ms
   final VoidCallback? onTap;
@@ -193,11 +192,12 @@ class ExpandedTile extends StatefulWidget {
 
 ////? Content
     required this.content,
-    this.contentSeperator = 6.0,
+    this.contentseparator = 6.0,
 ////? Misc
     required this.controller,
     this.enabled = true,
     this.theme = const ExpandedTileThemeData(),
+    this.disableAnimation = false,
     this.expansionDuration = const Duration(milliseconds: 200),
     this.expansionAnimationCurve = Curves.ease,
     this.onTap,
@@ -219,11 +219,12 @@ class ExpandedTile extends StatefulWidget {
     final double? trailingRotation, // default is 90
 ////? Content
     final Widget? content, // required
-    final double? contentSeperator, // default is 6.0
+    final double? contentseparator, // default is 6.0
 ////? Misc
     final bool? enabled,
     final ExpandedTileThemeData? theme, // default themedata
     final ExpandedTileController? controller, // required
+    final bool? disableAnimation,
     final Curve? expansionAnimationCurve, // default is ease
     final Duration? expansionDuration, // default is 200ms
     final VoidCallback? onTap,
@@ -241,11 +242,12 @@ class ExpandedTile extends StatefulWidget {
       trailingRotation: trailingRotation ?? this.trailingRotation,
 ////? Content
       content: content ?? this.content,
-      contentSeperator: contentSeperator ?? this.contentSeperator,
+      contentseparator: contentseparator ?? this.contentseparator,
 ////? Misc
       enabled: enabled ?? this.enabled,
       controller: controller ?? this.controller,
       theme: theme ?? this.theme,
+      disableAnimation: disableAnimation ?? this.disableAnimation,
       expansionDuration: expansionDuration ?? this.expansionDuration,
       expansionAnimationCurve:
           expansionAnimationCurve ?? this.expansionAnimationCurve,
@@ -270,7 +272,7 @@ class _ExpandedTileState extends State<ExpandedTile>
     tileController.addListener(() {
       if (mounted) {
         setState(() {
-          _isExpanded = widget.controller.isExpanded;
+          _isExpanded = tileController.isExpanded;
         });
       }
     });
@@ -353,27 +355,42 @@ class _ExpandedTileState extends State<ExpandedTile>
           ),
         ),
         SizedBox(
-          height: widget.contentSeperator,
+          height: widget.contentseparator,
         ),
         //* Content
-        AnimatedSize(
-          duration: widget.expansionDuration!,
-          curve: widget.expansionAnimationCurve!,
-          child: Container(
-            child: !_isExpanded
-                ? null
-                : Container(
-                    decoration: BoxDecoration(
-                      color: widget.theme!.contentBackgroundColor,
-                      borderRadius:
-                          BorderRadius.circular(widget.theme!.contentRadius!),
-                    ),
-                    padding: widget.theme!.contentPadding,
-                    width: double.infinity,
-                    child: widget.content,
-                  ),
-          ),
-        ),
+        widget.disableAnimation!
+            ? Container(
+                child: !_isExpanded
+                    ? null
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: widget.theme!.contentBackgroundColor,
+                          borderRadius: BorderRadius.circular(
+                              widget.theme!.contentRadius!),
+                        ),
+                        padding: widget.theme!.contentPadding,
+                        width: double.infinity,
+                        child: widget.content,
+                      ),
+              )
+            : AnimatedSize(
+                duration: widget.expansionDuration!,
+                curve: widget.expansionAnimationCurve!,
+                child: Container(
+                  child: !_isExpanded
+                      ? null
+                      : Container(
+                          decoration: BoxDecoration(
+                            color: widget.theme!.contentBackgroundColor,
+                            borderRadius: BorderRadius.circular(
+                                widget.theme!.contentRadius!),
+                          ),
+                          padding: widget.theme!.contentPadding,
+                          width: double.infinity,
+                          child: widget.content,
+                        ),
+                ),
+              ),
       ],
     );
   }
@@ -381,7 +398,7 @@ class _ExpandedTileState extends State<ExpandedTile>
 
 enum TileListConstructor {
   builder,
-  seperated,
+  separated,
 }
 
 typedef ExpandedTileBuilder = ExpandedTile Function(
@@ -392,10 +409,10 @@ typedef ExpandedTileBuilder = ExpandedTile Function(
 /// Trailing widget and programatic control with content expansion animation.
 ///
 ///
-/// This ListView also supports seperate controllers for each tile with seperate programatic controls.
+/// This ListView also supports separate controllers for each tile with separate programatic controls.
 ///
 ///
-/// Available constructors right now: [ExpandedListTile.builder()] , [ExpandedListTile.seperated()]
+/// Available constructors right now: [ExpandedListTile.builder()] , [ExpandedListTile.separated()]
 ///
 ///
 /// P.S : Supplied Controllers are overlooked in the [ExpandedTileList] builder widget, supply a new or initialized controller, it doesn't matter!
@@ -428,10 +445,11 @@ class ExpandedTileList extends StatefulWidget {
   final ScrollPhysics? physics;
   final EdgeInsetsGeometry? padding;
   final ExpandedTileBuilder itemBuilder;
-  final IndexedWidgetBuilder? seperatorBuilder;
+  final IndexedWidgetBuilder? separatorBuilder;
   final int itemCount;
   final String? restorationId;
   final int maxOpened;
+  final ScrollController? scrollController;
   final TileListConstructor _constructor;
 
   const ExpandedTileList.builder({
@@ -444,26 +462,28 @@ class ExpandedTileList extends StatefulWidget {
     this.reverse = false,
     this.shrinkWrap = true,
     this.maxOpened = 1,
+    this.scrollController,
   })  : assert(itemCount != 0),
         assert(maxOpened != 0),
         _constructor = TileListConstructor.builder,
-        seperatorBuilder = null,
+        separatorBuilder = null,
         super(key: key);
 
-  const ExpandedTileList.seperated({
+  const ExpandedTileList.separated({
     Key? key,
     required this.itemCount,
     required this.itemBuilder,
-    required this.seperatorBuilder,
+    required this.separatorBuilder,
     this.padding,
     this.physics,
     this.restorationId,
     this.reverse = false,
     this.shrinkWrap = true,
     this.maxOpened = 1,
+    this.scrollController,
   })  : assert(itemCount != 0),
         assert(maxOpened != 0),
-        _constructor = TileListConstructor.seperated,
+        _constructor = TileListConstructor.separated,
         super(key: key);
 
   @override
@@ -477,7 +497,7 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
   @override
   void initState() {
     super.initState();
-    scrollController = ScrollController();
+    scrollController = widget.scrollController ?? ScrollController();
     tileControllers = List.generate(
       widget.itemCount,
       (index) => ExpandedTileController(key: index),
@@ -513,19 +533,34 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
                               .enabled
                           ? () {}
                           : () {
-                              int openedTiles = openedTilesControllers.length;
-                              if (tileControllers[index].isExpanded) {
-                                if (openedTiles == widget.maxOpened) {
-                                  openedTilesControllers.last.collapse();
-                                  openedTilesControllers
-                                      .remove(openedTilesControllers.last);
-                                }
-                                openedTilesControllers
-                                    .add(tileControllers[index]);
-                              } else {
-                                openedTilesControllers
-                                    .remove(tileControllers[index]);
+                              int _openedTiles = tileControllers
+                                  .where((c) => c.isExpanded == true)
+                                  .toList()
+                                  .length;
+                              if (_openedTiles > widget.maxOpened) {
+                                tileControllers
+                                    .where((c) =>
+                                        c.isExpanded == true &&
+                                        c != tileControllers[index])
+                                    .first
+                                    .collapse();
                               }
+                              widget
+                                          .itemBuilder(
+                                            context,
+                                            index,
+                                            tileControllers[index],
+                                          )
+                                          .onTap !=
+                                      null
+                                  ? widget
+                                      .itemBuilder(
+                                        context,
+                                        index,
+                                        tileControllers[index],
+                                      )
+                                      .onTap!()
+                                  : () {};
                             });
             },
           )
@@ -537,7 +572,7 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
             physics: widget.physics,
             padding: widget.padding,
             separatorBuilder: (context, index) {
-              return widget.seperatorBuilder!(
+              return widget.separatorBuilder!(
                 context,
                 index,
               );
@@ -573,6 +608,22 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
                                 openedTilesControllers
                                     .remove(tileControllers[index]);
                               }
+                              widget
+                                          .itemBuilder(
+                                            context,
+                                            index,
+                                            tileControllers[index],
+                                          )
+                                          .onTap !=
+                                      null
+                                  ? widget
+                                      .itemBuilder(
+                                        context,
+                                        index,
+                                        tileControllers[index],
+                                      )
+                                      .onTap!()
+                                  : () {};
                             });
             },
           );
