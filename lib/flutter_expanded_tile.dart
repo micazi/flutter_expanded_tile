@@ -608,22 +608,22 @@ class _ExpandedTileListState extends State<ExpandedTileList> {
                                 openedTilesControllers
                                     .remove(tileControllers[index]);
                               }
-                              widget
-                                          .itemBuilder(
-                                            context,
-                                            index,
-                                            tileControllers[index],
-                                          )
-                                          .onTap !=
-                                      null
-                                  ? widget
+                              if (widget
                                       .itemBuilder(
                                         context,
                                         index,
                                         tileControllers[index],
                                       )
-                                      .onTap!()
-                                  : () {};
+                                      .onTap !=
+                                  null) {
+                                widget
+                                    .itemBuilder(
+                                      context,
+                                      index,
+                                      tileControllers[index],
+                                    )
+                                    .onTap!();
+                              }
                             });
             },
           );
