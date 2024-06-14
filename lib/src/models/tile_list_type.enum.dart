@@ -1,0 +1,4 @@
+enum TileListConstructor {
+  builder,
+  separated,
+}

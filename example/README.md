@@ -41,12 +41,18 @@ class _ExampleState extends State<Example> {
             child: ExpandedTile(
               theme: const ExpandedTileThemeData(
                 headerColor: Colors.green,
-                headerRadius: 24.0,
                 headerPadding: EdgeInsets.all(24.0),
                 headerSplashColor: Colors.red,
                 contentBackgroundColor: Colors.blue,
                 contentPadding: EdgeInsets.all(24.0),
-                contentRadius: 12.0,
+                headerBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 5),
+                        borderRadius: BorderRadius.circular(20),
+                ),
+                fullExpandedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 4),
+                        borderRadius: BorderRadius.circular(2),
+                ),
               ),
               controller: _controller,
               title: const Text("this is the title"),
@@ -56,6 +62,7 @@ class _ExampleState extends State<Example> {
                   child: Text("This is the content!"),
                 ),
               ),
+            footer: Text("this is the footer"),
                onTap: () {
             debugPrint("tapped!!");
           },
@@ -69,20 +76,18 @@ class _ExampleState extends State<Example> {
         itemCount: 3,
         maxOpened: 2,
         reverse: true,
-        itemBuilder: (context, index, controller) {
+        itemBuilder: (context, index, con) {
           return ExpandedTile(
             theme: const ExpandedTileThemeData(
+              initiallyOpenedControllersIndexes: [0,3],
               headerColor: Colors.green,
-              headerRadius: 24.0,
               headerPadding: EdgeInsets.all(24.0),
               headerSplashColor: Colors.red,
               //
               contentBackgroundColor: Colors.blue,
               contentPadding: EdgeInsets.all(24.0),
-              contentRadius: 12.0,
             ),
-            controller:
-                index == 2 ? controller.copyWith(isExpanded: true) : controller,
+            controller: con,
             title: Text("this is the title $index"),
             content: Container(
               color: Colors.red,
@@ -90,7 +95,7 @@ class _ExampleState extends State<Example> {
                 children: [
                   const Center(
                     child: Text(
-                        "This is the content!ksdjfl kjsdflk sjdflksjdf lskjfd lsdkfj  ls kfjlsfkjsdlfkjsfldkjsdflkjsfdlksjdflskdjf lksdjflskfjlsfkjslfkjsldfkjslfkjsldfkjsflksjflskjflskfjlsfkjslfkjsflksjflskfjlsfkjslfkjslfkjslfkjslfkjsldfkjsdf"),
+                        "This is the content!"),
                   ),
                   MaterialButton(
                     onPressed: () {
